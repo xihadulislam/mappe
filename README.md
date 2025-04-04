@@ -24,7 +24,7 @@ Mappe is a powerful Java library designed to simplify task execution on main and
 
 #### Step 1: Add JitPack Repository
 
-Depending on your build system, include the JitPack repository in your project configuration.
+Include the JitPack repository in your project configuration depending on your build system.
 
 - **For Gradle**:
   
@@ -50,11 +50,6 @@ Depending on your build system, include the JitPack repository in your project c
 </repositories>
  ```
 
-##### For SBT: In your build.sbt
- ```
-resolvers += "jitpack" at "https://jitpack.io"
- ```
-
 #### Step 2: Add the Dependency
 Add Mappe to your project dependencies.
 
@@ -73,10 +68,7 @@ For Maven:
     <version>1.0.0</version>
 </dependency>
  ```
-For SBT:
- ```
-libraryDependencies += "com.github.xihadulislam" % "mappe" % "1.0.0"
- ```
+
 #### Usage
 Here's a quick example of how to use the Mappe library in your project:
  ```
@@ -98,7 +90,7 @@ public class Example {
         });
         
         // Execute a coroutine task
-        Mappe.onCoroutineExecutor().executeCoroutine(() -> {
+        Mappe.onCoroutineExecutor().execute(() -> {
             System.out.println("Running coroutine task");
         });
     }
@@ -109,4 +101,4 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 
 #### Contributing
-Contributions are welcome! Please feel free to submit a pull request or open an issue for discussion.
+Contributions are welcome! Please feel free to submit a pull request or open an issue for us to talk about.
