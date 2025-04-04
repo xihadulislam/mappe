@@ -38,3 +38,22 @@ Depending on your build system, include the JitPack repository in your project c
           maven { url 'https://jitpack.io' }
       }
   }
+
+
+##### For Maven: In your pom.xml :
+ ```groovy
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+ ```
+
+##### For SBT: In your build.sbt
+ ```
+resolvers += "jitpack" at "https://jitpack.io"
+ ```
+
+#### Step 2: Add the Dependency
+Add Mappe to your project dependencies.
