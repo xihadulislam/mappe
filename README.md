@@ -2,7 +2,7 @@
 
 ![Mappe Version](https://jitpack.io/v/xihadulislam/mappe.svg)
 
-© 2025 [Xihad Islam](https://github.com/xihadulislam/). All rights reserved.
+© 2025 [@Xihad Islam](https://github.com/xihadulislam/). All rights reserved.
 
 Mappe is a powerful Java library designed to simplify task execution on main and background threads. It provides a flexible and easy-to-use API for managing concurrency in your JVM and Android applications.
 
@@ -101,7 +101,10 @@ public class Example {
 #### License
 This project is licensed under the MIT License. See the LICENSE file for details.
 
+## Thanks to all contributors ❤
 
+![Contributors](https://contrib.rocks/image?repo=xihadulislam/mappe "Contributors")
+[Link to Contributors Graph](https://github.com/xihadulislam/mappe/graphs/contributors)
 
 ## Thanks to all contributors ❤
 image:https://contrib.rocks/image?repo=xihadulislam/Mobile-Dev-Community-in-Bangladesh[link="https://github.com/xihadulislam/Mobile-Dev-Community-in-Bangladesh/graphs/contributors"]
