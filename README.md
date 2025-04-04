@@ -98,20 +98,10 @@ public class Example {
     }
 }
  ```
-#### License
-This project is licensed under the MIT License. See the LICENSE file for details.
-
-## Thanks to all contributors ❤
-
-![Contributors](https://contrib.rocks/image?repo=xihadulislam/mappe "Contributors")
-[Link to Contributors Graph](https://github.com/xihadulislam/mappe/graphs/contributors)
-
-## Thanks to all contributors ❤
-image:https://contrib.rocks/image?repo=xihadulislam/Mobile-Dev-Community-in-Bangladesh[link="https://github.com/xihadulislam/Mobile-Dev-Community-in-Bangladesh/graphs/contributors"]
 
 #### Contributing
 Contributions are welcome! Please feel free to submit a pull request or open an issue for us to talk about.
 
-=== -> Copyright & License
+#### -> Copyright & License
 
-Licensed under the MIT License, see the link:LICENSE[LICENSE] file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
