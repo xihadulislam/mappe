@@ -14,9 +14,14 @@ interface MappeExecutor : Executor {
 
     fun withThreadPoolSize(poolSize: Int): MappeExecutor
 
-    fun shutUp()
+    fun withDelay(delayMs: Long): MappeExecutor
 
-  //  fun executeAndShutUp(runnable: Runnable)
+    fun executeAndShutUp(runnable: Runnable) {
+        execute(runnable)
+        shutUp()
+    }
+
+    fun shutUp()
 
     fun isShutUp(): Boolean
 }

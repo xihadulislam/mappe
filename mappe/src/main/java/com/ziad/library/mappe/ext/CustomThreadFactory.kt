@@ -14,25 +14,8 @@ class CustomThreadFactory(private val taskType: String) : ThreadFactory {
 
     override fun newThread(r: Runnable): Thread {
         return Thread(group, r, "$TAG-$taskType-Thread-${threadCount.getAndIncrement()}").apply {
-            isDaemon = false // Ensure threads are non-daemon
-            priority = Thread.NORM_PRIORITY // Set default priority
+            isDaemon = false
+            priority = Thread.NORM_PRIORITY
         }
     }
 }
-
-//class EnhancedThreadFactory(private val taskType: String) : ThreadFactory {
-//
-//    private val threadCount = AtomicInteger(1)
-//    private val group: ThreadGroup? = System.getSecurityManager()?.threadGroup ?: Thread.currentThread().threadGroup
-//
-//    companion object {
-//        private const val TAG = "EnhancedThreadFactory"
-//    }
-//
-//    override fun newThread(r: Runnable): Thread {
-//        return Thread(group, r, "$TAG-$taskType-Thread-${threadCount.getAndIncrement()}").apply {
-//            isDaemon = false // Ensure threads are non-daemon
-//            priority = Thread.NORM_PRIORITY // Set default priority
-//        }
-//    }
-//}

@@ -4,104 +4,238 @@
 
 © 2025 [@Xihad Islam](https://github.com/xihadulislam/). All rights reserved.
 
-Mappe is a powerful Java library designed to simplify task execution on main and background threads. It provides a flexible and easy-to-use API for managing concurrency in your JVM and Android applications.
+Mappe is an Android library that simplifies background task execution. Give any task a name, get a dedicated thread pool — one line of code.
 
-## Features
+---
 
-- **Flexible Execution Models**: Choose between traditional thread-based execution or coroutine-based execution.
-- **Main Thread Support**: Execute tasks on the main thread, ensuring smooth UI updates.
-- **Customizable Background Executors**: Tailor background tasks with dedicated executors for different purposes (e.g., file downloads).
-- **Dynamic Thread Pool Management**: Automatically adjusts the thread pool size based on available system resources.
-- **Thread-Safe**: Implemented with thread-safe practices for reliable concurrent execution.
-- **Simple API**: Intuitive methods for task submission with minimal boilerplate code.
+## What's New in v2.0.0
 
-## Getting Started
+- **`Mappe.on(name)`** — create a dedicated pool with any name you choose
+- **`withDelay(ms)`** — schedule a task after a delay without blocking any thread
+- **`executeAndShutUp(runnable)`** — run a task then shut down the executor automatically
+- **Robust coroutine executor** — channel-based worker pool with bounded memory and backpressure
+- **`withThreadPoolSize(n)`** now controls actual coroutine worker count (was a no-op in v1)
+- **Thread-safe cancellation** — `@Volatile isCanceled` ensures `cancel()` is visible across threads
+- **`Mappe.getCoroutineReport()`** — live status of all coroutine worker pools
 
-### Prerequisites
+---
 
-- Java Development Kit (JDK) installed.
-- An IDE or build system (like Gradle or Maven) for your Java project.
+## Installation
 
-### Installation
+### Step 1 — Add JitPack repository
 
-#### Step 1: Add JitPack Repository
-
-Include the JitPack repository in your project configuration depending on your build system.
-
-- **For Gradle**:
-  
-  In your `settings.gradle` or `settings.gradle.kts`:
-  
-  ```groovy
-  dependencyResolutionManagement {
-      repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-      repositories {
-          mavenCentral()
-          maven { url 'https://jitpack.io' }
-      }
-  }
-
-
-##### For Maven: In your pom.xml :
- ```groovy
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
- ```
-
-#### Step 2: Add the Dependency
-Add Mappe to your project dependencies.
-
-For Gradle:
- ```
-dependencies {
-    implementation 'com.github.xihadulislam:mappe:1.0.0'
+**`settings.gradle.kts`**
+```kotlin
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+    }
 }
- ```
+```
 
-For Maven:
- ```
+**`settings.gradle`**
+```groovy
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+### Step 2 — Add the dependency
+
+**Gradle (Kotlin DSL)**
+```kotlin
+dependencies {
+    implementation("com.github.xihadulislam:mappe:2.0.0")
+}
+```
+
+**Gradle (Groovy)**
+```groovy
+dependencies {
+    implementation 'com.github.xihadulislam:mappe:2.0.0'
+}
+```
+
+**Maven**
+```xml
 <dependency>
     <groupId>com.github.xihadulislam</groupId>
     <artifactId>mappe</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
 </dependency>
- ```
+```
 
-#### Usage
-Here's a quick example of how to use the Mappe library in your project:
- ```
-public class Example {
-    public static void main(String[] args) {
-        // Execute a task on the main thread
-        Mappe.onMainThread().execute(() -> {
-            System.out.println("Running on main thread");
-        });
+---
 
-        // Execute a background task
-        Mappe.onBackgroundThread().execute(() -> {
-            System.out.println("Running in the background");
-        });
+## Usage
 
-        // Execute a file download task
-        Mappe.onFileDownloadBackgroundThread().execute(() -> {
-            System.out.println("Downloading a file...");
-        });
-        
-        // Execute a coroutine task
-        Mappe.onCoroutineExecutor().execute(() -> {
-            System.out.println("Running coroutine task");
-        });
+### `Mappe.on(name)` — the core API
+
+Pass any name and get a dedicated background pool for it.
+Two calls with the same name always share the same underlying pool.
+
+```java
+Mappe.on("payment").execute(() -> {
+    processPayment();
+});
+
+Mappe.on("sync").execute(() -> {
+    syncContacts();
+});
+
+Mappe.on("reports").execute(() -> {
+    generateReport();
+});
+```
+
+### Chain options onto `on()`
+
+Every option is chainable before `execute()`.
+
+**Control concurrency**
+```java
+// limit to 2 threads for this pool
+Mappe.on("reports")
+    .withThreadPoolSize(2)
+    .execute(() -> generateReport());
+```
+
+**Run tasks one at a time**
+```java
+Mappe.on("db-writes")
+    .serially()
+    .execute(() -> writeToDatabase());
+```
+
+**Delay execution**
+```java
+// runs after 3 seconds — no thread is blocked during the wait
+Mappe.on("retry")
+    .withDelay(3000)
+    .execute(() -> retryRequest());
+```
+
+**Execute then shut down**
+```java
+// submit the task, then close the pool automatically when it finishes
+Mappe.on("one-shot")
+    .executeAndShutUp(() -> doFinalCleanup());
+```
+
+### Main thread
+
+```java
+Mappe.onMainThread().execute(() -> {
+    textView.setText("done");
+});
+```
+
+### Convenience methods
+
+Named shortcuts for common task types — each delegates to `on()` with a preset name.
+
+| Method | Pool name |
+|--------|-----------|
+| `onBackgroundThread()` | Default |
+| `onIOBackgroundThread()` | I/O |
+| `onAllBackgroundThread()` | All |
+| `onBulkBackgroundThread()` | Bulk |
+| `onLogBackgroundThread()` | Log |
+| `onSocketBackgroundThread()` | Socket |
+| `onPrintBackgroundThread()` | Print |
+| `onFileDownloadBackgroundThread()` | File-downloading |
+
+```java
+Mappe.onFileDownloadBackgroundThread().execute(() -> downloadFile(url));
+Mappe.onLogBackgroundThread().execute(() -> writeLog(event));
+```
+
+### Task cancellation
+
+```java
+CancelableTask task = new CancelableTask() {
+    @Override
+    protected void doWork() {
+        // skipped entirely if cancel() was called before execution
     }
-}
- ```
+};
 
-#### Contributing
-Contributions are welcome! Please feel free to submit a pull request or open an issue for us to talk about.
+Mappe.on("upload").execute(task);
 
-#### -> Copyright & License
+// cancel from any thread at any time
+task.cancel();
+```
+
+### Background work with UI callback
+
+```kotlin
+Mappe.on("fetch").execute(object : UiRelatedTask<String>() {
+    override fun doWork(): String {
+        return fetchDataFromNetwork()   // background thread
+    }
+
+    override fun thenDoUiRelatedWork(result: String) {
+        textView.text = result          // main thread
+    }
+})
+```
+
+### Background work with progress updates
+
+```kotlin
+Mappe.on("import").execute(object : UiRelatedProgressTask<String, Int>() {
+    override fun doWork(): String {
+        for (i in 1..100) {
+            publishProgress(i)              // posts to main thread
+        }
+        return "done"
+    }
+
+    override fun onProgressUpdate(progress: Int) {
+        progressBar.progress = progress     // main thread
+    }
+
+    override fun thenDoUiRelatedWork(result: String) {
+        progressBar.visibility = View.GONE
+    }
+})
+```
+
+### Monitoring
+
+```java
+// Thread executor pools
+Log.d("Mappe", Mappe.getThreadReport().toString());
+
+// Coroutine worker pools
+Log.d("Mappe", Mappe.getCoroutineReport().toString());
+```
+
+---
+
+## Requirements
+
+- **Min SDK**: 24
+- **Compile SDK**: 35
+- **Java**: 8+
+- **Kotlin**: 1.9+
+
+---
+
+## Contributing
+
+Contributions are welcome. Open an issue or submit a pull request.
+
+---
+
+## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

@@ -17,31 +17,69 @@ public class Mappe {
 
     private static final Boolean executorTypeThread = true; // thread = true / coroutine = false
     private static final Executor sMainThreadExecutor = new MainThreadExecutor.MainExecutor();
-    private static final MappeExecutor coroutineExecutor = new BackgroundCoroutineExecutor.CoroutineExecutor();
 
     public static Executor onMainThread() {
         return sMainThreadExecutor;
     }
 
-    public static MappeExecutor onBackgroundThread() {
+    // ── Generic entry point ──────────────────────────────────────────────────
+    // Use any name to get (or reuse) a dedicated pool for that task type.
+    // Two calls with the same name share the same underlying pool.
+    //
+    //   Mappe.on("payment").execute(...)
+    //   Mappe.on("sync-contacts").execute(...)
+    // ─────────────────────────────────────────────────────────────────────────
+    public static MappeExecutor on(String taskType) {
         if (executorTypeThread) {
-            return new BackgroundThreadExecutor.BackgroundExecutor().withThreadPoolSize(defaultThreadPoolSize()).withTaskType("default");
+            return BackgroundThreadExecutor.createExecutor()
+                    .withThreadPoolSize(defaultThreadPoolSize())
+                    .withTaskType(taskType);
         } else {
-            return onCoroutineExecutor();
+            return BackgroundCoroutineExecutor.createExecutor()
+                    .withThreadPoolSize(defaultThreadPoolSize())
+                    .withTaskType(taskType);
         }
+    }
+
+    // ── Named convenience methods (delegate to on()) ──────────────────────────
+    public static MappeExecutor onBackgroundThread() {
+        return on("Default");
+    }
+
+    public static MappeExecutor onIOBackgroundThread() {
+        return on("I/O");
+    }
+
+    public static MappeExecutor onAllBackgroundThread() {
+        return on("All");
+    }
+
+    public static MappeExecutor onBulkBackgroundThread() {
+        return on("Bulk");
+    }
+
+    public static MappeExecutor onLogBackgroundThread() {
+        return on("Log");
+    }
+
+    public static MappeExecutor onSocketBackgroundThread() {
+        return on("Socket");
+    }
+
+    public static MappeExecutor onPrintBackgroundThread() {
+        return on("Print");
     }
 
     public static MappeExecutor onFileDownloadBackgroundThread() {
-        if (executorTypeThread) {
-            return new BackgroundThreadExecutor.BackgroundExecutor().withThreadPoolSize(defaultThreadPoolSize()).withTaskType("file-downloading");
-        } else {
-            return onCoroutineExecutor();
-        }
+        return on("File-downloading");
     }
 
+    public static StringBuilder getThreadReport() {
+        return BackgroundThreadExecutor.getThreadReport();
+    }
 
-    public static MappeExecutor onCoroutineExecutor() {
-        return coroutineExecutor;
+    public static StringBuilder getCoroutineReport() {
+        return BackgroundCoroutineExecutor.getCoroutineReport();
     }
 
 

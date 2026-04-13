@@ -1,9 +1,6 @@
 package com.ziad.library.mappe.ext
 
-import com.ziad.library.mappe.ext.AbstractCancelableRunnable
-import com.ziad.library.mappe.ext.CancelableRunnable
-
-abstract class CancelableTask : AbstractCancelableRunnable(), CancelableRunnable {
+abstract class CancelableTask : AbstractCancelableRunnable() {
     override fun run() {
         if (!isCanceled) {
             doWork()

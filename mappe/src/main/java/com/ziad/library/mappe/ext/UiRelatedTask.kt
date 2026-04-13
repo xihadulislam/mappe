@@ -25,6 +25,6 @@ abstract class UiRelatedTask<Result> : AbstractCancelableRunnable(), CancelableR
     protected abstract fun thenDoUiRelatedWork(result: Result)
 
     companion object {
-        var sUiHandler: Handler = Handler(Looper.getMainLooper())
+        val sUiHandler: Handler = Handler(Looper.getMainLooper())
     }
 }

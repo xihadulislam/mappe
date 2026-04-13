@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.ziad.library.mappe"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
@@ -33,8 +33,7 @@ android {
 dependencies {
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
+    implementation(libs.kotlinx.coroutines.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -47,7 +46,7 @@ publishing {
                 from(components["release"])
                 groupId = "com.github.xihadulislam"
                artifactId = "mappe"
-               version = "1.0.0"
+               version = "2.0.0"
             }
         }
     }
