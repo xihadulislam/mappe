@@ -1,4 +1,5 @@
 jdk:
   - openjdk17
-build:
+install:
+  - chmod +x gradlew
   - ./gradlew :mappe:publishToMavenLocal
