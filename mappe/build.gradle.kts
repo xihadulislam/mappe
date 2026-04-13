@@ -49,7 +49,7 @@ publishing {
         register<MavenPublication>("release") {
             groupId = "com.github.xihadulislam"
             artifactId = "mappe"
-            version = "2.0.2"
+            version = "2.0.3"
             afterEvaluate {
                 from(components["release"])
             }
