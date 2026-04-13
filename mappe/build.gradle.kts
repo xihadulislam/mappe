@@ -28,6 +28,11 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
 }
 
 dependencies {
@@ -42,11 +47,11 @@ dependencies {
 publishing {
     publications {
         register<MavenPublication>("release") {
+            groupId = "com.github.xihadulislam"
+            artifactId = "mappe"
+            version = "2.0.0"
             afterEvaluate {
                 from(components["release"])
-                groupId = "com.github.xihadulislam"
-               artifactId = "mappe"
-               version = "2.0.0"
             }
         }
     }
