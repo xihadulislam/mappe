@@ -8,7 +8,7 @@ Mappe is an Android library that simplifies background task execution. Give any 
 
 ---
 
-## What's New in v2.0.0
+## What's New in v2.0.1
 
 - **`Mappe.on(name)`** — create a dedicated pool with any name you choose
 - **`withDelay(ms)`** — schedule a task after a delay without blocking any thread
@@ -53,14 +53,14 @@ dependencyResolutionManagement {
 **Gradle (Kotlin DSL)**
 ```kotlin
 dependencies {
-    implementation("com.github.xihadulislam:mappe:2.0.0")
+    implementation("com.github.xihadulislam:mappe:2.0.1")
 }
 ```
 
 **Gradle (Groovy)**
 ```groovy
 dependencies {
-    implementation 'com.github.xihadulislam:mappe:2.0.0'
+    implementation 'com.github.xihadulislam:mappe:2.0.1'
 }
 ```
 
@@ -69,7 +69,7 @@ dependencies {
 <dependency>
     <groupId>com.github.xihadulislam</groupId>
     <artifactId>mappe</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
 </dependency>
 ```
 
